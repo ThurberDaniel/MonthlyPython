@@ -20,20 +20,20 @@ monthDictionary = {
 
 
 def index(request):
-    return HttpResponse("hello, Im working")
+    return HttpResponse("hello, Im working"
 
 
 def monthly_challenge_by_number(request, month):
-    months = list(monthDictionary.keys())
+    months=list(monthDictionary.keys())
     if month > len(months):
         return HttpResponseNotFound("Invalid Month")
-    forward_month = months[month-1]
+    forward_month=months[month-1]
     return HttpResponseRedirect("/challenges/" + forward_month)
 
 
 def monthly_challenge(request, month):
     try:
-        challenge_text = monthDictionary[month]
+        challenge_text=monthDictionary[month]
         return HttpResponse(challenge_text)
     except:
         return HttpResponseNotFound("This Month is not supported")
