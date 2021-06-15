@@ -31,7 +31,7 @@ def monthly_challenge_by_number(request, month):
     return HttpResponseRedirect("/challenges/" + forward_month)
 
 
-def monthly_challenge(
+def monthly_challenge(request, month):
     try:
         challenge_text = monthDictionary[month]
         return HttpResponse(challenge_text)
