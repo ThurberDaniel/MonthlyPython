@@ -1,26 +1,39 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect, response
+from django.urls import reverse
 
-# Create your views here.
+# Create your views
 
 monthDictionary = {
-    "January": "Shovel Snow New Year",
-    "Febuary": " Valentines Day",
-    "March": "St Partricks Day",
-    "April": "Rainy",
-    "May": "Memorial Day",
-    "June": "Summer Time",
-    "July": "Fourth of July",
-    "August": "Slowly Fall",
-    "September": "Fall Time",
-    "October": "Halloween",
-    "November": "Thanksgiving",
-    "December": "Christmas",
+    "january": "Shovel Snow New Year",
+    "febuary": " Valentines Day",
+    "march": "St Partricks Day",
+    "april": "Rainy",
+    "may": "Memorial Day",
+    "june": "Summer Time",
+    "july": "Fourth of July",
+    "august": "Slowly Fall",
+    "september": "Fall Time",
+    "october": "Halloween",
+    "november": "Thanksgiving",
+    "december": "Christmas",
 }
 
 
 def index(request):
-    return HttpResponse("hello, Im working")
+    list_items = ""
+    months = list(monthDictionary.keys())
+    for month in months:
+        capitalized = month.capitalize()
+        path = reverse("month-challenge", args=[month])
+        list_items += f"<li><a href=\"{path}\">{capitalized}</a></li>"
+    response_data = f"<ul>{list_items}</ul>"
+
+    return HttpResponse(response_data)
+
+
+# def index(request):
+#     return HttpResponse("hello, Im working")
 
 
 def monthly_challenge_by_number(request, month):
@@ -28,12 +41,14 @@ def monthly_challenge_by_number(request, month):
     if month > len(months):
         return HttpResponseNotFound("Invalid Month")
     forward_month = months[month-1]
-    return HttpResponseRedirect("/challenges/" + forward_month)
+    redirect_path = reverse("month-challenge", args=[forward_month])
+    return HttpResponseRedirect(redirect_path)
 
 
 def monthly_challenge(request, month):
     try:
         challenge_text = monthDictionary[month]
+        response_data = f"<h1>{challenge_text}</h1>"
         return HttpResponse(challenge_text)
     except:
-        return HttpResponseNotFound("This Month is not supported")
+        return HttpResponseNotFound("<h1>This Month is not supported</h1>")
